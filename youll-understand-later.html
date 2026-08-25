@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You'll Understand Later.</title>
+<style>
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: #08080b;
+    color: #f2eee8;
+    font-family: Georgia, "Times New Roman", serif;
+    overflow-x: hidden;
+  }
+
+  .grain {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    opacity: .055;
+    z-index: 20;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
+  }
+
+  .glow {
+    position: fixed;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(165,115,255,.11), transparent 65%);
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    filter: blur(10px);
+  }
+
+  main {
+    width: min(920px, 92%);
+    margin: auto;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    position: relative;
+  }
+
+  .eyebrow {
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: .34em;
+    font-size: 10px;
+    color: #8e8b96;
+    margin-bottom: 28px;
+  }
+
+  h1 {
+    font-size: clamp(44px, 8vw, 88px);
+    line-height: .98;
+    font-weight: 400;
+    letter-spacing: -.045em;
+    margin: 0;
+  }
+
+  .hero p {
+    margin: 28px auto 0;
+    max-width: 500px;
+    color: #a8a5ad;
+    font-size: 17px;
+    line-height: 1.7;
+  }
+
+  .scroll {
+    position: absolute;
+    bottom: 34px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: .25em;
+    text-transform: uppercase;
+    color: #77747d;
+    animation: breathe 2.5s ease-in-out infinite;
+  }
+
+  @keyframes breathe {
+    50% { opacity: .35; transform: translateX(-50%) translateY(5px); }
+  }
+
+  .story {
+    padding: 120px 0 180px;
+  }
+
+  .intro {
+    text-align: center;
+    margin-bottom: 100px;
+  }
+
+  .intro h2 {
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 400;
+    margin: 0 0 16px;
+  }
+
+  .intro p {
+    color: #8f8c94;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  .timeline {
+    position: relative;
+    width: min(640px, 100%);
+    margin: auto;
+  }
+
+  .timeline::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, #39343f 8%, #39343f 92%, transparent);
+  }
+
+  .event {
+    position: relative;
+    width: 50%;
+    padding: 0 45px 105px 0;
+    opacity: 0;
+    transform: translateY(25px);
+    transition: opacity .8s ease, transform .8s ease;
+  }
+
+  .event.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .event:nth-child(even) {
+    margin-left: 50%;
+    padding: 0 0 105px 45px;
+  }
+
+  .dot {
+    position: absolute;
+    top: 3px;
+    right: -4px;
+    width: 9px;
+    height: 9px;
+    border: 1px solid #aaa2b8;
+    border-radius: 50%;
+    background: #08080b;
+    box-shadow: 0 0 16px rgba(170,150,210,.18);
+  }
+
+  .event:nth-child(even) .dot { left: -4px; right: auto; }
+
+  .chapter {
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: .22em;
+    font-size: 9px;
+    color: #77737d;
+    margin-bottom: 13px;
+  }
+
+  .event h3 {
+    margin: 0;
+    font-size: clamp(21px, 3vw, 29px);
+    font-weight: 400;
+  }
+
+  .event p {
+    color: #87838d;
+    font-size: 13px;
+    line-height: 1.7;
+    margin: 12px 0 0;
+  }
+
+  .locked {
+    text-align: center;
+    padding-top: 25px;
+  }
+
+  .lock {
+    width: 62px;
+    height: 62px;
+    margin: 0 auto 25px;
+    border: 1px solid #3d3945;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: Arial, sans-serif;
+    font-size: 20px;
+    color: #aaa4b1;
+    box-shadow: 0 0 35px rgba(155,125,190,.08);
+  }
+
+  .locked h3 {
+    font-size: clamp(25px, 5vw, 40px);
+    font-weight: 400;
+    margin: 0;
+  }
+
+  .date {
+    margin-top: 12px;
+    font-family: Arial, sans-serif;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    font-size: 10px;
+    color: #78747e;
+  }
+
+  .locked p {
+    max-width: 420px;
+    margin: 28px auto 0;
+    color: #9a969f;
+    font-size: 14px;
+    line-height: 1.8;
+  }
+
+  footer {
+    text-align: center;
+    padding: 0 0 70px;
+    color: #4f4c54;
+    font-family: Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: .22em;
+    text-transform: uppercase;
+  }
+
+  @media (max-width: 620px) {
+    .timeline::before { left: 12px; }
+    .event, .event:nth-child(even) {
+      width: 100%;
+      margin-left: 0;
+      padding: 0 0 80px 42px;
+    }
+    .dot, .event:nth-child(even) .dot {
+      left: 8px;
+      right: auto;
+    }
+    .story { padding-top: 90px; }
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="glow"></div>
+
+<main>
+  <section class="hero">
+    <div>
+      <div class="eyebrow">A little something</div>
+      <h1>Some stories<br>aren't told all at once.</h1>
+      <p>
+        There are things that make sense only when you look back.
+        This is just the beginning.
+      </p>
+    </div>
+    <div class="scroll">Scroll slowly ↓</div>
+  </section>
+
+  <section class="story">
+    <div class="intro">
+      <h2>Between then &amp; now.</h2>
+      <p>Somewhere along the way, a story started writing itself.</p>
+    </div>
+
+    <div class="timeline">
+      <article class="event">
+        <span class="dot"></span>
+        <div class="chapter">Chapter 01</div>
+        <h3>The Beginning</h3>
+        <p>It started somewhere. You probably remember.</p>
+      </article>
+
+      <article class="event">
+        <span class="dot"></span>
+        <div class="chapter">Chapter 02</div>
+        <h3>Somewhere...</h3>
+        <p>And then, somehow, things became a little more interesting.</p>
+      </article>
+
+      <article class="event">
+        <span class="dot"></span>
+        <div class="chapter">Chapter 03</div>
+        <h3>Along the way</h3>
+        <p>A few moments stayed longer than they were supposed to.</p>
+      </article>
+
+      <article class="event">
+        <span class="dot"></span>
+        <div class="chapter">Chapter 04</div>
+        <h3>Today</h3>
+        <p>And here we are.</p>
+      </article>
+
+      <article class="event locked">
+        <span class="dot"></span>
+        <div class="lock">⌁</div>
+        <h3>September 20</h3>
+        <div class="date">2026 · Locked</div>
+        <p>Some things are worth waiting for.</p>
+      </article>
+    </div>
+  </section>
+
+  <footer>You'll understand later.</footer>
+</main>
+
+<script>
+  const events = document.querySelectorAll('.event');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('show');
+    });
+  }, { threshold: 0.2 });
+
+  events.forEach(event => observer.observe(event));
+</script>
+</body>
+</html>
