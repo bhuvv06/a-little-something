@@ -2,330 +2,572 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>You'll Understand Later.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>A Little Birthday Puzzle</title>
 <style>
   * { box-sizing: border-box; }
+
+  :root {
+    --bg: #09090d;
+    --text: #f7f2ec;
+    --muted: #a8a3ad;
+    --line: #302c37;
+    --accent: #c7a7ff;
+  }
+
   html { scroll-behavior: smooth; }
+
   body {
     margin: 0;
     min-height: 100vh;
-    background: #08080b;
-    color: #f2eee8;
+    background:
+      radial-gradient(circle at 50% 10%, rgba(163, 118, 255, .12), transparent 32%),
+      var(--bg);
+    color: var(--text);
     font-family: Georgia, "Times New Roman", serif;
     overflow-x: hidden;
+  }
+
+  button {
+    font: inherit;
   }
 
   .grain {
     position: fixed;
     inset: 0;
     pointer-events: none;
-    opacity: .055;
-    z-index: 20;
+    opacity: .045;
+    z-index: 50;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.45'/%3E%3C/svg%3E");
   }
 
-  .glow {
-    position: fixed;
-    width: 420px;
-    height: 420px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(165,115,255,.11), transparent 65%);
-    top: 20%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    pointer-events: none;
-    filter: blur(10px);
+  .page {
+    width: min(720px, 92%);
+    margin: 0 auto;
+    padding: 28px 0 70px;
   }
 
-  main {
-    width: min(920px, 92%);
-    margin: auto;
-  }
-
-  .hero {
-    min-height: 100vh;
+  .screen {
+    min-height: 88vh;
     display: grid;
     place-items: center;
     text-align: center;
-    position: relative;
   }
 
   .eyebrow {
     font-family: Arial, sans-serif;
     text-transform: uppercase;
-    letter-spacing: .34em;
+    letter-spacing: .28em;
     font-size: 10px;
-    color: #8e8b96;
-    margin-bottom: 28px;
+    color: #85808b;
+    margin-bottom: 22px;
   }
 
   h1 {
-    font-size: clamp(44px, 8vw, 88px);
-    line-height: .98;
-    font-weight: 400;
-    letter-spacing: -.045em;
     margin: 0;
-  }
-
-  .hero p {
-    margin: 28px auto 0;
-    max-width: 500px;
-    color: #a8a5ad;
-    font-size: 17px;
-    line-height: 1.7;
-  }
-
-  .scroll {
-    position: absolute;
-    bottom: 34px;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: Arial, sans-serif;
-    font-size: 9px;
-    letter-spacing: .25em;
-    text-transform: uppercase;
-    color: #77747d;
-    animation: breathe 2.5s ease-in-out infinite;
-  }
-
-  @keyframes breathe {
-    50% { opacity: .35; transform: translateX(-50%) translateY(5px); }
-  }
-
-  .story {
-    padding: 120px 0 180px;
-  }
-
-  .intro {
-    text-align: center;
-    margin-bottom: 100px;
-  }
-
-  .intro h2 {
-    font-size: clamp(28px, 5vw, 46px);
     font-weight: 400;
-    margin: 0 0 16px;
+    font-size: clamp(43px, 10vw, 78px);
+    line-height: .98;
+    letter-spacing: -.045em;
   }
 
-  .intro p {
-    color: #8f8c94;
-    font-size: 15px;
+  .lead {
+    max-width: 510px;
+    margin: 24px auto 0;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  .primary-btn {
+    margin-top: 30px;
+    border: 1px solid #655b72;
+    background: rgba(255,255,255,.035);
+    color: var(--text);
+    padding: 14px 22px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
+  }
+
+  .primary-btn:hover {
+    transform: translateY(-2px);
+    background: rgba(199,167,255,.09);
+    border-color: #9b83c2;
+  }
+
+  .primary-btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
+  }
+
+  .hidden { display: none !important; }
+
+  .game {
+    padding: 55px 0 30px;
+  }
+
+  .game-head {
+    text-align: center;
+    margin-bottom: 26px;
+  }
+
+  .game-head h2 {
+    margin: 0;
+    font-weight: 400;
+    font-size: clamp(30px, 7vw, 48px);
+  }
+
+  .game-head p {
+    margin: 12px auto 0;
+    max-width: 500px;
+    color: var(--muted);
     line-height: 1.7;
+    font-size: 14px;
   }
 
-  .timeline {
+  .status {
+    min-height: 22px;
+    margin-top: 12px;
+    color: #8f8997;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: .05em;
+  }
+
+  .puzzle-wrap {
+    width: min(430px, 100%);
+    margin: 28px auto 0;
+  }
+
+  .puzzle {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    aspect-ratio: 9 / 16;
+    gap: 3px;
+    padding: 3px;
+    background: #17151b;
+    border: 1px solid #37313f;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 25px 70px rgba(0,0,0,.35);
+  }
+
+  .piece {
     position: relative;
-    width: min(640px, 100%);
-    margin: auto;
+    min-width: 0;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+    background-image: url("birthday-photo.jpeg");
+    background-repeat: no-repeat;
+    background-size: 300% 300%;
+    transition: transform .18s ease, filter .18s ease, opacity .18s ease;
   }
 
-  .timeline::before {
+  .piece::after {
     content: "";
     position: absolute;
-    left: 50%;
-    top: 0;
-    bottom: 0;
-    width: 1px;
-    background: linear-gradient(to bottom, transparent, #39343f 8%, #39343f 92%, transparent);
+    inset: 0;
+    border: 1px solid rgba(255,255,255,.055);
+    pointer-events: none;
   }
 
-  .event {
-    position: relative;
-    width: 50%;
-    padding: 0 45px 105px 0;
-    opacity: 0;
-    transform: translateY(25px);
-    transition: opacity .8s ease, transform .8s ease;
+  .piece:hover {
+    filter: brightness(1.08);
   }
 
-  .event.show {
-    opacity: 1;
-    transform: translateY(0);
+  .piece.selected {
+    z-index: 2;
+    transform: scale(.96);
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+    filter: brightness(1.14);
   }
 
-  .event:nth-child(even) {
-    margin-left: 50%;
-    padding: 0 0 105px 45px;
+  .piece:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -3px;
+    z-index: 3;
   }
 
-  .dot {
-    position: absolute;
-    top: 3px;
-    right: -4px;
-    width: 9px;
-    height: 9px;
-    border: 1px solid #aaa2b8;
-    border-radius: 50%;
-    background: #08080b;
-    box-shadow: 0 0 16px rgba(170,150,210,.18);
-  }
-
-  .event:nth-child(even) .dot { left: -4px; right: auto; }
-
-  .chapter {
-    font-family: Arial, sans-serif;
-    text-transform: uppercase;
-    letter-spacing: .22em;
-    font-size: 9px;
-    color: #77737d;
-    margin-bottom: 13px;
-  }
-
-  .event h3 {
-    margin: 0;
-    font-size: clamp(21px, 3vw, 29px);
-    font-weight: 400;
-  }
-
-  .event p {
-    color: #87838d;
-    font-size: 13px;
-    line-height: 1.7;
-    margin: 12px 0 0;
-  }
-
-  .locked {
+  .hint {
     text-align: center;
-    padding-top: 25px;
+    color: #6f6975;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    letter-spacing: .08em;
+    margin-top: 15px;
   }
 
-  .lock {
-    width: 62px;
-    height: 62px;
-    margin: 0 auto 25px;
-    border: 1px solid #3d3945;
+  .success {
+    text-align: center;
+    padding: 100px 0 20px;
+  }
+
+  .success-mark {
+    width: 68px;
+    height: 68px;
+    margin: 0 auto 24px;
+    border: 1px solid #645770;
     border-radius: 50%;
     display: grid;
     place-items: center;
-    font-family: Arial, sans-serif;
-    font-size: 20px;
-    color: #aaa4b1;
-    box-shadow: 0 0 35px rgba(155,125,190,.08);
+    font-size: 25px;
+    color: #d8c3ff;
+    animation: pop .55s ease both;
   }
 
-  .locked h3 {
-    font-size: clamp(25px, 5vw, 40px);
-    font-weight: 400;
+  @keyframes pop {
+    0% { transform: scale(.5); opacity: 0; }
+    70% { transform: scale(1.08); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .success h2 {
     margin: 0;
+    font-size: clamp(34px, 8vw, 58px);
+    font-weight: 400;
   }
 
-  .date {
-    margin-top: 12px;
+  .success p {
+    max-width: 510px;
+    margin: 20px auto 0;
+    color: #aaa5ae;
+    line-height: 1.85;
+    font-size: 15px;
+  }
+
+  .wish {
+    max-width: 560px;
+    margin: 55px auto 0;
+    padding: 34px 24px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .wish .small {
     font-family: Arial, sans-serif;
-    letter-spacing: .18em;
     text-transform: uppercase;
-    font-size: 10px;
-    color: #78747e;
+    letter-spacing: .24em;
+    font-size: 9px;
+    color: #77717e;
+    margin-bottom: 18px;
   }
 
-  .locked p {
-    max-width: 420px;
-    margin: 28px auto 0;
-    color: #9a969f;
+  .wish h3 {
+    margin: 0;
+    font-size: clamp(27px, 6vw, 42px);
+    font-weight: 400;
+  }
+
+  .wish p {
+    margin: 18px auto 0;
+    max-width: 470px;
+    color: #9c97a0;
+    line-height: 1.85;
     font-size: 14px;
-    line-height: 1.8;
+  }
+
+  .signature {
+    margin-top: 26px;
+    color: #d2c8dc;
+    font-style: italic;
+    font-size: 15px;
   }
 
   footer {
     text-align: center;
-    padding: 0 0 70px;
-    color: #4f4c54;
+    padding-top: 55px;
+    color: #504b55;
     font-family: Arial, sans-serif;
     font-size: 9px;
-    letter-spacing: .22em;
+    letter-spacing: .2em;
     text-transform: uppercase;
   }
 
-  @media (max-width: 620px) {
-    .timeline::before { left: 12px; }
-    .event, .event:nth-child(even) {
-      width: 100%;
-      margin-left: 0;
-      padding: 0 0 80px 42px;
+  #confetti {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 40;
+  }
+
+  .confetti {
+    position: fixed;
+    width: 7px;
+    height: 12px;
+    top: -20px;
+    opacity: .95;
+    animation: fall linear forwards;
+  }
+
+  @keyframes fall {
+    to {
+      transform: translate3d(var(--x), 110vh, 0) rotate(var(--r));
+      opacity: 0;
     }
-    .dot, .event:nth-child(even) .dot {
-      left: 8px;
-      right: auto;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: .01ms !important;
     }
-    .story { padding-top: 90px; }
+  }
+
+  @media (max-width: 480px) {
+    .page {
+      width: min(94%, 430px);
+      padding-top: 18px;
+    }
+
+    .screen {
+      min-height: 82vh;
+    }
+
+    .game {
+      padding-top: 35px;
+    }
+
+    .piece {
+      min-height: 0;
+    }
   }
 </style>
 </head>
+
 <body>
 <div class="grain"></div>
-<div class="glow"></div>
+<div id="confetti" aria-hidden="true"></div>
 
-<main>
-  <section class="hero">
+<main class="page">
+
+  <section id="intro" class="screen">
     <div>
-      <div class="eyebrow">A little something</div>
-      <h1>Some stories<br>aren't told all at once.</h1>
-      <p>
-        There are things that make sense only when you look back.
-        This is just the beginning.
+      <div class="eyebrow">A little birthday surprise</div>
+      <h1>Before your<br>birthday wish...</h1>
+      <p class="lead">
+        I have one tiny challenge for you.<br>
+        Someone seems to have messed up a picture. :)
       </p>
-    </div>
-    <div class="scroll">Scroll slowly ↓</div>
-  </section>
-
-  <section class="story">
-    <div class="intro">
-      <h2>Between then &amp; now.</h2>
-      <p>Somewhere along the way, a story started writing itself.</p>
-    </div>
-
-    <div class="timeline">
-      <article class="event">
-        <span class="dot"></span>
-        <div class="chapter">Chapter 01</div>
-        <h3>The Beginning</h3>
-        <p>It started somewhere. You probably remember.</p>
-      </article>
-
-      <article class="event">
-        <span class="dot"></span>
-        <div class="chapter">Chapter 02</div>
-        <h3>Somewhere...</h3>
-        <p>And then, somehow, things became a little more interesting.</p>
-      </article>
-
-      <article class="event">
-        <span class="dot"></span>
-        <div class="chapter">Chapter 03</div>
-        <h3>Along the way</h3>
-        <p>A few moments stayed longer than they were supposed to.</p>
-      </article>
-
-      <article class="event">
-        <span class="dot"></span>
-        <div class="chapter">Chapter 04</div>
-        <h3>Today</h3>
-        <p>And here we are.</p>
-      </article>
-
-      <article class="event locked">
-        <span class="dot"></span>
-        <div class="lock">⌁</div>
-        <h3>September 20</h3>
-        <div class="date">2026 · Locked</div>
-        <p>Some things are worth waiting for.</p>
-      </article>
+      <button id="startBtn" class="primary-btn" type="button">
+        Put it back together →
+      </button>
     </div>
   </section>
 
-  <footer>You'll understand later.</footer>
+  <section id="game" class="game hidden">
+    <div class="game-head">
+      <div class="eyebrow">The little challenge</div>
+      <h2>Can you fix this?</h2>
+      <p>
+        Tap one piece, then tap another to swap them.
+        Put all nine pieces back where they belong.
+      </p>
+      <div id="status" class="status" aria-live="polite"></div>
+    </div>
+
+    <div class="puzzle-wrap">
+      <div id="puzzle" class="puzzle" aria-label="Birthday photo puzzle"></div>
+      <div class="hint">9 pieces · no timer · take your time</div>
+    </div>
+  </section>
+
+  <section id="success" class="success hidden">
+    <div class="success-mark">✓</div>
+    <h2>You did it. ❤️</h2>
+    <p>
+      You managed to put everything back together...
+      so I guess you've earned what was waiting on the other side.
+    </p>
+
+    <button id="wishBtn" class="primary-btn" type="button">
+      Open your birthday wish ✨
+    </button>
+
+    <div id="wish" class="wish hidden">
+      <div class="small">For you, on your birthday</div>
+      <h3>Happy Birthday! 🎂</h3>
+      <p>
+        I could have just sent a normal “Happy Birthday”
+        message, but that felt a little too ordinary.
+        So here's a tiny something I made for you instead.
+        <br><br>
+        I hope this year brings you lots of happiness,
+        beautiful memories, random reasons to laugh,
+        and plenty of moments that make you genuinely smile.
+        <br><br>
+        Have an amazing birthday and an even better year ahead. 🫶
+      </p>
+      <div class="signature">— Bhuvanesh</div>
+    </div>
+  </section>
+
+  <footer>Made with a little extra effort.</footer>
 </main>
 
 <script>
-  const events = document.querySelectorAll('.event');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) entry.target.classList.add('show');
-    });
-  }, { threshold: 0.2 });
+(() => {
+  const GRID = 3;
+  const puzzle = document.getElementById("puzzle");
+  const startBtn = document.getElementById("startBtn");
+  const wishBtn = document.getElementById("wishBtn");
+  const intro = document.getElementById("intro");
+  const game = document.getElementById("game");
+  const success = document.getElementById("success");
+  const wish = document.getElementById("wish");
+  const status = document.getElementById("status");
+  const confetti = document.getElementById("confetti");
 
-  events.forEach(event => observer.observe(event));
+  let order = [];
+  let selected = null;
+  let moves = 0;
+  let started = false;
+
+  // Create a guaranteed-solvable shuffle by making legal swaps
+  // from the solved state.
+  function makeSolvableShuffle() {
+    order = Array.from({ length: GRID * GRID }, (_, i) => i);
+
+    let blank = order.length - 1;
+    let previousBlank = -1;
+
+    for (let i = 0; i < 80; i++) {
+      const row = Math.floor(blank / GRID);
+      const col = blank % GRID;
+      const neighbors = [];
+
+      if (row > 0) neighbors.push(blank - GRID);
+      if (row < GRID - 1) neighbors.push(blank + GRID);
+      if (col > 0) neighbors.push(blank - 1);
+      if (col < GRID - 1) neighbors.push(blank + 1);
+
+      const choices = neighbors.filter(n => n !== previousBlank);
+      const target = choices[Math.floor(Math.random() * choices.length)];
+
+      [order[blank], order[target]] = [order[target], order[blank]];
+      previousBlank = blank;
+      blank = target;
+    }
+
+    // Extremely unlikely edge case: ensure it isn't already solved.
+    if (order.every((v, i) => v === i)) {
+      [order[0], order[1]] = [order[1], order[0]];
+    }
+  }
+
+  function pieceStyle(pieceIndex) {
+    const row = Math.floor(pieceIndex / GRID);
+    const col = pieceIndex % GRID;
+
+    return {
+      backgroundPosition: `${(col / (GRID - 1)) * 100}% ${(row / (GRID - 1)) * 100}%`
+    };
+  }
+
+  function render() {
+    puzzle.innerHTML = "";
+
+    order.forEach((pieceIndex, slotIndex) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "piece";
+      button.setAttribute("aria-label", `Puzzle piece ${slotIndex + 1}`);
+      button.style.backgroundPosition = pieceStyle(pieceIndex).backgroundPosition;
+
+      if (selected === slotIndex) {
+        button.classList.add("selected");
+      }
+
+      button.addEventListener("click", () => handlePieceClick(slotIndex));
+      puzzle.appendChild(button);
+    });
+
+    status.textContent = moves === 0
+      ? "Choose any two pieces to swap."
+      : `${moves} move${moves === 1 ? "" : "s"}`;
+  }
+
+  function handlePieceClick(slotIndex) {
+    if (selected === null) {
+      selected = slotIndex;
+      render();
+      return;
+    }
+
+    if (selected === slotIndex) {
+      selected = null;
+      render();
+      return;
+    }
+
+    [order[selected], order[slotIndex]] = [order[slotIndex], order[selected]];
+    moves++;
+    selected = null;
+    render();
+
+    if (order.every((value, index) => value === index)) {
+      setTimeout(completePuzzle, 450);
+    }
+  }
+
+  function startGame() {
+    if (started) return;
+    started = true;
+    makeSolvableShuffle();
+    moves = 0;
+    selected = null;
+
+    intro.classList.add("hidden");
+    game.classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    render();
+  }
+
+  function completePuzzle() {
+    game.classList.add("hidden");
+    success.classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    launchConfetti();
+  }
+
+  function launchConfetti() {
+    confetti.innerHTML = "";
+    const pieces = 90;
+
+    for (let i = 0; i < pieces; i++) {
+      const bit = document.createElement("span");
+      bit.className = "confetti";
+
+      bit.style.left = `${Math.random() * 100}%`;
+      bit.style.setProperty("--x", `${(Math.random() - .5) * 260}px`);
+      bit.style.setProperty("--r", `${Math.random() * 720 - 360}deg`);
+      bit.style.animationDuration = `${2.2 + Math.random() * 2.2}s`;
+      bit.style.animationDelay = `${Math.random() * .35}s`;
+
+      // Kept neutral/elegant so it matches the dark design.
+      bit.style.background = ["#c7a7ff", "#f7f2ec", "#9b83c2", "#d9c8e8"][i % 4];
+      bit.style.borderRadius = i % 3 === 0 ? "50%" : "2px";
+
+      confetti.appendChild(bit);
+    }
+
+    setTimeout(() => {
+      confetti.innerHTML = "";
+    }, 5000);
+  }
+
+  wishBtn.addEventListener("click", () => {
+    wish.classList.remove("hidden");
+    wishBtn.classList.add("hidden");
+    wish.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+
+  startBtn.addEventListener("click", startGame);
+})();
 </script>
 </body>
 </html>
