@@ -79,6 +79,14 @@
     line-height: 1.75;
   }
 
+  .music-status {
+    margin-top: 13px;
+    color: #67616d;
+    font-family: Arial, sans-serif;
+    font-size: 9px;
+    letter-spacing: .06em;
+  }
+
   .primary-btn {
     margin-top: 30px;
     border: 1px solid #655b72;
@@ -476,6 +484,8 @@
 <div class="grain"></div>
 <div id="confetti" aria-hidden="true"></div>
 
+<audio id="birthdayMusic" preload="auto" src="birthday-tune.mp3"></audio>
+
 <main class="page">
 
   <section id="intro" class="screen">
@@ -489,6 +499,7 @@
       <button id="startBtn" class="primary-btn" type="button">
         Put it back together →
       </button>
+      <div id="musicStatus" class="music-status" aria-live="polite">♪ a little tune will play with the surprise</div>
     </div>
   </section>
 
@@ -560,6 +571,8 @@
   const GRID = 3;
   const puzzle = document.getElementById("puzzle");
   const startBtn = document.getElementById("startBtn");
+  const birthdayMusic = document.getElementById("birthdayMusic");
+  const musicStatus = document.getElementById("musicStatus");
   const intro = document.getElementById("intro");
   const game = document.getElementById("game");
   const success = document.getElementById("success");
@@ -661,6 +674,17 @@
   function startGame() {
     if (started) return;
     started = true;
+
+    // The uploaded video was trimmed to exactly 00:40–01:42.
+    // Starting playback here uses the user's button tap as the browser gesture,
+    // which allows audio to start on supported mobile browsers.
+    birthdayMusic.currentTime = 0;
+    birthdayMusic.play().then(() => {
+      musicStatus.textContent = "♪ playing your little birthday tune";
+    }).catch(() => {
+      musicStatus.textContent = "♪ tap the page once if your browser kept the tune muted";
+    });
+
     makeSolvableShuffle();
     moves = 0;
     selected = null;
@@ -703,6 +727,10 @@
       confetti.innerHTML = "";
     }, 5000);
   }
+
+  birthdayMusic.addEventListener("ended", () => {
+    musicStatus.textContent = "♪ the little tune has finished";
+  });
 
   startBtn.addEventListener("click", startGame);
 })();
