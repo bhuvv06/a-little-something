@@ -298,6 +298,68 @@
     color: #9c96a1;
   }
 
+  .memory-photo {
+    opacity: 0;
+    transform: translateY(18px);
+    overflow: hidden;
+    border: 1px solid #37313f;
+    background: #141218;
+    box-shadow: 0 22px 55px rgba(0,0,0,.28);
+    animation: photoReveal .9s ease forwards;
+  }
+
+  .memory-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .photo-one {
+    width: min(390px, 88%);
+    aspect-ratio: 16 / 10;
+    margin: 34px auto 0;
+    border-radius: 18px;
+    transform: rotate(-1deg) translateY(18px);
+    animation-delay: 2.9s;
+  }
+
+  .memory-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    width: min(560px, 96%);
+    margin: 34px auto 0;
+  }
+
+  .memory-grid .memory-photo {
+    aspect-ratio: 3 / 4;
+    border-radius: 14px;
+  }
+
+  .photo-two { animation-delay: 4.0s; transform: translateY(18px) rotate(-1.2deg); }
+  .photo-three { animation-delay: 4.25s; transform: translateY(18px) rotate(1.2deg); }
+
+  @keyframes photoReveal {
+    to {
+      opacity: 1;
+      transform: translateY(0) rotate(0deg);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .memory-grid {
+      gap: 8px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .memory-photo {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
   @keyframes revealLine {
     to {
       opacity: 1;
@@ -461,9 +523,22 @@
         <strong>तू जशी आहेस ना, तशीच राहा.</strong>
       </div>
 
+      <div class="memory-photo photo-one">
+        <img src="memory-sky.jpeg" alt="A birthday memory">
+      </div>
+
       <div class="reveal-line line-4">
         खूप हस, भरपूर खुश राहा<br>
         आणि आयुष्यात तुला हवं ते सगळं मिळू दे. ✨
+      </div>
+
+      <div class="memory-grid">
+        <div class="memory-photo photo-two">
+          <img src="memory-saree-blue.jpeg" alt="A birthday memory">
+        </div>
+        <div class="memory-photo photo-three">
+          <img src="memory-saree-cream.jpeg" alt="A birthday memory">
+        </div>
       </div>
 
       <div class="reveal-line line-5 birthday-line">
